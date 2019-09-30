@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>3D Model Viewer</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    input {
+      position: absolute;
+      background: transparent;
+      border: 1px solid #fff;
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <input type="number" placeholder="x">
+  <input type="number" style="top: 30px;" placeholder="y">
+  <input type="number" style="top: 60px;" placeholder="z">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/108/three.min.js"></script>
+  <script src="./OBJLoader.js"></script>
+  <script>
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    const loader = new THREE.OBJLoader();
+    loader.load("GewehrOBJversion.obj", obj => {
+      obj.rotation.x = 200;
+      obj.castShadow = true;
+      obj.receiveShadow = true;
+
+      scene.add(obj);
+
+      function animate() {
+        let id = requestAnimationFrame(animate);
+        obj.rotation.z += 0.01;
+        renderer.render(scene, camera);
+        renderer.setPixelRatio(window.devicePixelRatio);
+
+        document.addEventListener('click', () => {
+          cancelAnimationFrame(id);
+        });
+
+        document.querySelectorAll('input').forEach(input => {
+          input.addEventListener('keyup', e => {
+            obj.rotation[e.target.placeholder] = e.target.value;
+            renderer.render(scene, camera);
+          });
+        });
+      }
+      animate();
+    });
+
+    const light = new THREE.PointLight(0xffffff);
+    light.position.set(0, 0, 100);
+    scene.add(light);
+
+    camera.position.z = 100;
+  </script>
+</body>
+
+</html>
