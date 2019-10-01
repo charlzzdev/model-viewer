@@ -19,6 +19,10 @@
       border: 1px solid #fff;
       color: #fff;
     }
+
+    canvas {
+      -webkit-user-drag: element;
+    }
   </style>
 </head>
 
@@ -29,6 +33,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/108/three.min.js"></script>
   <script src="./OBJLoader.js"></script>
+  <script src="./OrbitControls.js"></script>
   <script>
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -37,9 +42,11 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+
     const loader = new THREE.OBJLoader();
     loader.load("GewehrOBJversion.obj", obj => {
-      obj.rotation.x = 200;
+      obj.rotation.x = 4.65;
       obj.castShadow = true;
       obj.receiveShadow = true;
 
@@ -47,13 +54,9 @@
 
       function animate() {
         let id = requestAnimationFrame(animate);
-        obj.rotation.z += 0.01;
         renderer.render(scene, camera);
         renderer.setPixelRatio(window.devicePixelRatio);
-
-        document.addEventListener('click', () => {
-          cancelAnimationFrame(id);
-        });
+        controls.update();
 
         document.querySelectorAll('input').forEach(input => {
           input.addEventListener('keyup', e => {
@@ -66,8 +69,12 @@
     });
 
     const light = new THREE.PointLight(0xffffff);
-    light.position.set(0, 0, 100);
+    light.position.set(-50, 0, 100);
     scene.add(light);
+
+    const light2 = new THREE.PointLight(0xffffff);
+    light2.position.set(30, 20, -70);
+    scene.add(light2);
 
     camera.position.z = 100;
   </script>
