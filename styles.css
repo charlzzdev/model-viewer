@@ -1,0 +1,16 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+input {
+  position: absolute;
+  background: transparent;
+  border: 1px solid #fff;
+  color: #fff;
+}
+
+canvas {
+  -webkit-user-drag: element;
+}

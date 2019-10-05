@@ -6,24 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>3D Model Viewer</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-
-    input {
-      position: absolute;
-      background: transparent;
-      border: 1px solid #fff;
-      color: #fff;
-    }
-
-    canvas {
-      -webkit-user-drag: element;
-    }
-  </style>
+  <link rel="stylesheet" href="./styles.css">
 </head>
 
 <body>
@@ -32,53 +15,9 @@
   <input type="number" style="top: 60px;" placeholder="z">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/108/three.min.js"></script>
-  <script src="./OBJLoader.js"></script>
-  <script src="./OrbitControls.js"></script>
-  <script>
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer();
-
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
-
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-
-    const loader = new THREE.OBJLoader();
-    loader.load("GewehrOBJversion.obj", obj => {
-      obj.rotation.x = 4.65;
-      obj.castShadow = true;
-      obj.receiveShadow = true;
-      obj.scale.set(-1, 1, 1);
-
-      scene.add(obj);
-
-      function animate() {
-        let id = requestAnimationFrame(animate);
-        renderer.render(scene, camera);
-        renderer.setPixelRatio(window.devicePixelRatio);
-        controls.update();
-
-        document.querySelectorAll('input').forEach(input => {
-          input.addEventListener('keyup', e => {
-            obj.rotation[e.target.placeholder] = e.target.value;
-            renderer.render(scene, camera);
-          });
-        });
-      }
-      animate();
-    });
-
-    const light = new THREE.PointLight(0xffffff);
-    light.position.set(-50, 0, 100);
-    scene.add(light);
-
-    const light2 = new THREE.PointLight(0xffffff);
-    light2.position.set(30, 20, -70);
-    scene.add(light2);
-
-    camera.position.z = 100;
-  </script>
+  <script src="./modules/OBJLoader.js"></script>
+  <script src="./modules/OrbitControls.js"></script>
+  <script src="./main.js"></script>
 </body>
 
 </html>
